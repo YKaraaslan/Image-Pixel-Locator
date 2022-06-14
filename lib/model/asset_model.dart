@@ -3,22 +3,22 @@ import 'dart:convert';
 class AssetModel {
   String? name;
   String? description;
-  int? counter;
-  Coordinates? coordinates;
+  String? type;
+  List<Machines?>? machines;
 
   AssetModel({
     this.name,
     this.description,
-    this.counter,
-    this.coordinates,
+    this.type,
+    this.machines,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'description': description,
-      'counter': counter,
-      'coordinates': coordinates?.toMap(),
+      'type': type,
+      'machines': machines?.map((x) => x?.toMap()).toList(),
     };
   }
 
@@ -26,14 +26,46 @@ class AssetModel {
     return AssetModel(
       name: map['name'],
       description: map['description'],
-      counter: map['counter']?.toInt(),
-      coordinates: map['coordinates'] != null ? Coordinates.fromMap(map['coordinates']) : null,
+      type: map['type'],
+      machines: map['machines'] != null ? List<Machines?>.from(map['machines']?.map((x) => Machines?.fromMap(x))) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory AssetModel.fromJson(String source) => AssetModel.fromMap(json.decode(source));
+}
+
+class Machines {
+  String? name;
+  String? description;
+  Coordinates? coordinates;
+
+  Machines({
+    this.name,
+    this.description,
+    this.coordinates,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      'coordinates': coordinates?.toMap(),
+    };
+  }
+
+  factory Machines.fromMap(Map<String, dynamic> map) {
+    return Machines(
+      name: map['name'],
+      description: map['description'],
+      coordinates: map['coordinates'] != null ? Coordinates.fromMap(map['coordinates']) : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Machines.fromJson(String source) => Machines.fromMap(json.decode(source));
 }
 
 class Coordinates {

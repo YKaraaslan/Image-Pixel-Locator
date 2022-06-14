@@ -21,15 +21,14 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
   GlobalKey imageKey = GlobalKey();
   String imagePath = 'assets/map2.png';
   img.Image? photo;
-  double globalX = 0.0;
-  double globalY = 0.0;
   late Animation<double> animation;
   late AnimationController animationcontroller;
-  Color colorBlink = Colors.transparent;
+  late List<Widget> machines;
 
   @override
   void initState() {
     super.initState();
+    machines = [];
 
     animationcontroller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
     animationcontroller.repeat();
@@ -50,9 +49,19 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
-      setBlink(widget.model.coordinates!.x!, widget.model.coordinates!.y!);
+      setBlink(widget.model);
       return body();
     });
+  }
+
+  Widget photoWidget() {
+    return RepaintBoundary(
+      child: Image.asset(
+        imagePath,
+        key: imageKey,
+        fit: BoxFit.fill,
+      ),
+    );
   }
 
   Widget body() {
@@ -61,59 +70,43 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
         title: const Text("Color picker"),
       ),
       body: InteractiveViewer(
-        child: Stack(
-          children: [
-            RepaintBoundary(
-              child: Image.asset(
-                imagePath,
-                key: imageKey,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              top: globalY - (animation.value / 2),
-              left: globalX - (animation.value / 2),
-              child: Container(
-                decoration: BoxDecoration(shape: BoxShape.circle, color: colorBlink),
-                height: animation.value,
-                width: animation.value,
-              ),
-            ),
-            Positioned(
-              top: globalY - 15,
-              left: globalX - 15,
-              child: GestureDetector(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(widget.model.name ?? 'Title'),
-                      content: Text(widget.model.description ?? "Message"),
-                      actions: [
-                        TextButton(
-                          child: const Text("OK"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    );
+        child: Stack(children: machines),
+      ),
+    );
+  }
+
+  Widget positionedWidget(Machines model, double x, double y) {
+    return Positioned(
+      top: y - (animation.value / 2),
+      left: x - (animation.value / 2),
+      child: GestureDetector(
+        onTap: () => showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(model.name ?? 'Title'),
+              content: Text(model.description ?? "Message"),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
                 ),
-                child: Container(
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.transparent),
-                  height: 50,
-                  width: 50,
-                ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
+        ),
+        child: Container(
+          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red.withOpacity(0.7)),
+          height: animation.value,
+          width: animation.value,
         ),
       ),
     );
   }
 
-  Future<void> setBlink(double x, double y) async {
+  Future<void> setBlink(AssetModel model) async {
     if (photo == null) {
       ByteData imageBytes = await rootBundle.load(imagePath);
       List<int> values = imageBytes.buffer.asUint8List();
@@ -124,21 +117,24 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
     await Future.delayed(const Duration(milliseconds: 300));
 
     RenderBox? box = imageKey.currentContext?.findRenderObject() as RenderBox?;
-    Offset localPosition = ui.Offset(x, y);
+    machines = [];
+    machines.add(photoWidget());
+
+    for (var machine in model.machines!) {
+      Offset localPosition = ui.Offset(machine!.coordinates!.x!, machine.coordinates!.y!);
+
+      if (box != null) {
+        double widgetScale = box.size.width / photo!.width;
+
+        double px = (localPosition.dx * widgetScale);
+        double py = (localPosition.dy * widgetScale);
+
+        machines.add(positionedWidget(machine, px, py));
+      }
+    }
 
     if (box != null) {
-      double widgetScale = box.size.width / photo!.width;
-
-      double px = (localPosition.dx * widgetScale);
-      double py = (localPosition.dy * widgetScale);
-
-      setState(() {
-        globalX = px;
-        globalY = py;
-        if (colorBlink == Colors.transparent) {
-          colorBlink = Colors.red.withOpacity(0.7);
-        }
-      });
+      setState(() {});
     }
   }
 }

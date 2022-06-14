@@ -49,7 +49,7 @@ class _SearchableState extends State<Searchable> {
                       ),
                     );
                   },
-                  title: Text(value.searchList[index].name! + (value.searchList[index].counter! > 1 ? ' (x${value.searchList[index].counter.toString()})' : '')),
+                  title: Text(value.searchList[index].name! + (value.searchList[index].machines!.length > 1 ? ' (x${value.searchList[index].machines!.length.toString()})' : '')),
                   subtitle: Text(value.searchList[index].description!),
                 ),
               ),
