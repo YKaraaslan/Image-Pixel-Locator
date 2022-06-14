@@ -3,11 +3,13 @@ import 'dart:convert';
 class AssetModel {
   String? name;
   String? description;
+  int? counter;
   Coordinates? coordinates;
 
   AssetModel({
     this.name,
     this.description,
+    this.counter,
     this.coordinates,
   });
 
@@ -15,6 +17,7 @@ class AssetModel {
     return {
       'name': name,
       'description': description,
+      'counter': counter,
       'coordinates': coordinates?.toMap(),
     };
   }
@@ -23,6 +26,7 @@ class AssetModel {
     return AssetModel(
       name: map['name'],
       description: map['description'],
+      counter: map['counter']?.toInt(),
       coordinates: map['coordinates'] != null ? Coordinates.fromMap(map['coordinates']) : null,
     );
   }

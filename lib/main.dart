@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sample/view/color_picker_widget.dart';
 
 import 'view/searchable.dart';
 import 'view/viewmodel.dart';
@@ -48,9 +49,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
-        body: Searchable(),
+        body: const Searchable(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ColorPickerWidget(),
+              ),
+            );
+          },
+          child: const Icon(Icons.chevron_right),
+        ),
       ),
     );
   }

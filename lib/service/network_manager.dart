@@ -14,7 +14,6 @@ abstract class INetworkManager {
 class NetworkManager extends INetworkManager {
   final dio = Dio(BaseOptions(
     baseUrl: 'http://192.168.1.104:8080/',
-    connectTimeout: 100
   ));
 
   Future<dynamic> _getDioRequest() async {

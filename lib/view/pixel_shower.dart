@@ -19,12 +19,13 @@ class PixelShower extends StatefulWidget {
 
 class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStateMixin {
   GlobalKey imageKey = GlobalKey();
-  String imagePath = 'assets/map.jpg';
+  String imagePath = 'assets/map2.png';
   img.Image? photo;
   double globalX = 0.0;
   double globalY = 0.0;
   late Animation<double> animation;
   late AnimationController animationcontroller;
+  Color colorBlink = Colors.transparent;
 
   @override
   void initState() {
@@ -38,10 +39,6 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
         setState(() {});
       }
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await setBlink(widget.model.coordinates!.x!, widget.model.coordinates!.y!);
-    });
   }
 
   @override
@@ -52,6 +49,13 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    return OrientationBuilder(builder: (context, orientation) {
+      setBlink(widget.model.coordinates!.x!, widget.model.coordinates!.y!);
+      return body();
+    });
+  }
+
+  Widget body() {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Color picker"),
@@ -70,9 +74,37 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
               top: globalY - (animation.value / 2),
               left: globalX - (animation.value / 2),
               child: Container(
-                decoration:  BoxDecoration(shape: BoxShape.circle, color: Colors.red.withOpacity(0.7)),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: colorBlink),
                 height: animation.value,
                 width: animation.value,
+              ),
+            ),
+            Positioned(
+              top: globalY - 15,
+              left: globalX - 15,
+              child: GestureDetector(
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(widget.model.name ?? 'Title'),
+                      content: Text(widget.model.description ?? "Message"),
+                      actions: [
+                        TextButton(
+                          child: const Text("OK"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                child: Container(
+                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.transparent),
+                  height: 50,
+                  width: 50,
+                ),
               ),
             ),
           ],
@@ -93,14 +125,20 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
 
     RenderBox? box = imageKey.currentContext?.findRenderObject() as RenderBox?;
     Offset localPosition = ui.Offset(x, y);
-    double widgetScale = box!.size.width / photo!.width;
 
-    double px = (localPosition.dx * widgetScale);
-    double py = (localPosition.dy * widgetScale);
+    if (box != null) {
+      double widgetScale = box.size.width / photo!.width;
 
-    setState(() {
-      globalX = px;
-      globalY = py;
-    });
+      double px = (localPosition.dx * widgetScale);
+      double py = (localPosition.dy * widgetScale);
+
+      setState(() {
+        globalX = px;
+        globalY = py;
+        if (colorBlink == Colors.transparent) {
+          colorBlink = Colors.red.withOpacity(0.7);
+        }
+      });
+    }
   }
 }

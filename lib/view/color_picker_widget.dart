@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -7,18 +8,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:image/image.dart' as img;
 
-import '../model/asset_model.dart';
-
 class ColorPickerWidget extends StatefulWidget {
-  const ColorPickerWidget({Key? key, required this.model}) : super(key: key);
-  final AssetModel model;
+  const ColorPickerWidget({Key? key}) : super(key: key);
 
   @override
   State<ColorPickerWidget> createState() => _ColorPickerWidgetState();
 }
 
 class _ColorPickerWidgetState extends State<ColorPickerWidget> {
-  String imagePath = 'assets/map.jpg';
+  String imagePath = 'assets/map2.png';
   GlobalKey imageKey = GlobalKey();
   GlobalKey paintKey = GlobalKey();
   late GlobalKey currentKey;
@@ -37,7 +35,6 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
       setState(() {
         box = currentKey.currentContext?.findRenderObject() as RenderBox?;
       });
-      setBlink(widget.model.coordinates!.x!, widget.model.coordinates!.y!);
     });
   }
 
@@ -68,29 +65,17 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                       onPanUpdate: (details) {
                         searchPixel(details.globalPosition);
                       },
-                      child: Stack(
-                        children: [
-                          Image.asset(
-                            imagePath,
-                            key: imageKey,
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            top: globalX,
-                            left: globalY,
-                            child: const CircleAvatar(
-                              backgroundColor: Colors.red,
-                              radius: 15,
-                            ),
-                          )
-                        ],
+                      child: Image.asset(
+                        imagePath,
+                        key: imageKey,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.all(70),
                     width: 50,
-                    height: 50,
+                    height: 1000,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: selectedColor,
@@ -106,7 +91,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                   ),
                   Positioned(
                     left: 114,
-                    top: 95,
+                    top: 580,
                     child: Text(
                       '$selectedColor',
                       style: const TextStyle(color: Colors.white, backgroundColor: Colors.black54),
@@ -138,24 +123,9 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
     int pixel32 = photo!.getPixelSafe(px.toInt(), py.toInt());
     int hex = abgrToArgb(pixel32);
 
+    log('$px, $py');
+
     _stateController.add(Color(hex));
-  }
-
-  void setBlink(double x, double y) async {
-    if (photo == null) {
-      await (loadImageBundleBytes());
-    }
-
-    Offset localPosition = ui.Offset(x, y);
-    double widgetScale = box!.size.width / photo!.width;
-
-    double px = (localPosition.dx / widgetScale);
-    double py = (localPosition.dy / widgetScale);
-
-    setState(() {
-      globalX = px;
-      globalY = py;
-    });
   }
 
   Future<void> loadImageBundleBytes() async {
