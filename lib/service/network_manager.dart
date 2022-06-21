@@ -6,9 +6,9 @@ import '../model/asset_model.dart';
 
 abstract class INetworkManager {
   INetworkManager();
-  late List<AssetModel> returnType;
+  late List<GameModel> returnType;
   final String _path = '';
-  Future<List<AssetModel>?> getModels();
+  Future<List<GameModel>?> getModels();
 }
 
 class NetworkManager extends INetworkManager {
@@ -25,12 +25,12 @@ class NetworkManager extends INetworkManager {
   }
 
   @override
-  Future<List<AssetModel>?> getModels() async {
+  Future<List<GameModel>?> getModels() async {
     final response = await _getDioRequest();
     returnType = [];
     if (response is List) {
       return response.map((e) {
-        return AssetModel.fromMap(e);
+        return GameModel.fromMap(e);
       }).toList();
     } else {
       return [];

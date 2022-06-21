@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-class AssetModel {
+class GameModel {
   String? name;
   String? description;
   String? type;
   List<Machines?>? machines;
 
-  AssetModel({
+  GameModel({
     this.name,
     this.description,
     this.type,
@@ -22,8 +22,8 @@ class AssetModel {
     };
   }
 
-  factory AssetModel.fromMap(Map<String, dynamic> map) {
-    return AssetModel(
+  factory GameModel.fromMap(Map<String, dynamic> map) {
+    return GameModel(
       name: map['name'],
       description: map['description'],
       type: map['type'],
@@ -33,17 +33,19 @@ class AssetModel {
 
   String toJson() => json.encode(toMap());
 
-  factory AssetModel.fromJson(String source) => AssetModel.fromMap(json.decode(source));
+  factory GameModel.fromJson(String source) => GameModel.fromMap(json.decode(source));
 }
 
 class Machines {
   String? name;
   String? description;
+  String? type;
   Coordinates? coordinates;
 
   Machines({
     this.name,
     this.description,
+    this.type,
     this.coordinates,
   });
 
@@ -51,6 +53,7 @@ class Machines {
     return {
       'name': name,
       'description': description,
+      'type': type,
       'coordinates': coordinates?.toMap(),
     };
   }
@@ -59,6 +62,7 @@ class Machines {
     return Machines(
       name: map['name'],
       description: map['description'],
+      type: map['type'],
       coordinates: map['coordinates'] != null ? Coordinates.fromMap(map['coordinates']) : null,
     );
   }
@@ -69,29 +73,68 @@ class Machines {
 }
 
 class Coordinates {
-  double? x;
-  double? y;
+  double? startX;
+  double? startY;
+  double? endX;
+  double? endY;
 
   Coordinates({
-    this.x,
-    this.y,
+    this.startX,
+    this.startY,
+    this.endX,
+    this.endY,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'x': x,
-      'y': y,
+      'startX': startX,
+      'startY': startY,
+      'endX': endX,
+      'endY': endY,
     };
   }
 
   factory Coordinates.fromMap(Map<String, dynamic> map) {
     return Coordinates(
-      x: map['x']?.toDouble(),
-      y: map['y']?.toDouble(),
+      startX: map['startX']?.toDouble(),
+      startY: map['startY']?.toDouble(),
+      endX: map['endX']?.toDouble(),
+      endY: map['endY']?.toDouble(),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory Coordinates.fromJson(String source) => Coordinates.fromMap(json.decode(source));
+}
+
+enum Types {
+  none,
+  rectangle,
+  circle,
+  line,
+}
+
+extension ParseToString on Types {
+  String getName() {
+    return toString().split('.').last.capitalize();
+  }
+}
+
+extension CapitalizeString on String {
+  String capitalize() {
+    return this[0].toUpperCase() + substring(1).toLowerCase();
+  }
+
+  Types getType() {
+    if (this == Types.rectangle.getName()) {
+      return Types.rectangle;
+    } else if (this == Types.circle.getName()) {
+      return Types.circle;
+    } else if (this == Types.line.getName()) {
+      return Types.line;
+    } else {
+      return Types.none;
+    }
+  }
 }

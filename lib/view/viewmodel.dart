@@ -7,7 +7,7 @@ import '../service/network_manager.dart';
 class ViewModel extends ChangeNotifier {
   late final GlobalKey<FormState> formKey;
   late final TextEditingController textEditingController;
-  late List<AssetModel> searchList;
+  late List<GameModel> searchList;
 
   Future<void> getModel() async {
     Global.model = await NetworkManager().getModels();

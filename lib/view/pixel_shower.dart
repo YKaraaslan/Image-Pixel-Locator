@@ -11,18 +11,18 @@ import '../model/asset_model.dart';
 class PixelShower extends StatefulWidget {
   const PixelShower({Key? key, required this.model}) : super(key: key);
 
-  final AssetModel model;
+  final GameModel model;
 
   @override
   State<PixelShower> createState() => _PixelShowerState();
 }
 
-class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStateMixin {
+class _PixelShowerState extends State<PixelShower> with TickerProviderStateMixin {
   GlobalKey imageKey = GlobalKey();
   String imagePath = 'assets/map2.png';
   img.Image? photo;
-  late Animation<double> animation;
-  late AnimationController animationcontroller;
+  late Animation<double> sizeAnimation, opacityAnimation;
+  late AnimationController sizeAnimationController, opacityAnimationController;
   late List<Widget> machines;
 
   @override
@@ -30,10 +30,19 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
     super.initState();
     machines = [];
 
-    animationcontroller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    animationcontroller.repeat();
-    animation = Tween<double>(begin: 0, end: 50).animate(animationcontroller);
-    animation.addListener(() {
+    sizeAnimationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    sizeAnimationController.repeat();
+    sizeAnimation = Tween<double>(begin: 0, end: 40).animate(sizeAnimationController);
+    sizeAnimation.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+
+    opacityAnimationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    opacityAnimationController.repeat();
+    opacityAnimation = Tween<double>(begin: 1, end: 0.3).animate(opacityAnimationController);
+    opacityAnimation.addListener(() {
       if (mounted) {
         setState(() {});
       }
@@ -42,7 +51,8 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    animationcontroller.dispose();
+    sizeAnimationController.dispose();
+    opacityAnimationController.dispose();
     super.dispose();
   }
 
@@ -77,8 +87,8 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
 
   Widget positionedWidget(Machines model, double x, double y) {
     return Positioned(
-      top: y - (animation.value / 2),
-      left: x - (animation.value / 2),
+      top: y - (sizeAnimation.value / 2),
+      left: x - (sizeAnimation.value / 2),
       child: GestureDetector(
         onTap: () => showDialog(
           context: context,
@@ -97,16 +107,19 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
             );
           },
         ),
-        child: Container(
-          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red.withOpacity(0.7)),
-          height: animation.value,
-          width: animation.value,
+        child: Opacity(
+          opacity: opacityAnimation.value,
+          child: Container(
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red.withOpacity(0.7)),
+            height: sizeAnimation.value,
+            width: sizeAnimation.value,
+          ),
         ),
       ),
     );
   }
 
-  Future<void> setBlink(AssetModel model) async {
+  Future<void> setBlink(GameModel model) async {
     if (photo == null) {
       ByteData imageBytes = await rootBundle.load(imagePath);
       List<int> values = imageBytes.buffer.asUint8List();
@@ -121,7 +134,7 @@ class _PixelShowerState extends State<PixelShower> with SingleTickerProviderStat
     machines.add(photoWidget());
 
     for (var machine in model.machines!) {
-      Offset localPosition = ui.Offset(machine!.coordinates!.x!, machine.coordinates!.y!);
+      Offset localPosition = ui.Offset(machine!.coordinates!.startX!, machine.coordinates!.startY!);
 
       if (box != null) {
         double widgetScale = box.size.width / photo!.width;
