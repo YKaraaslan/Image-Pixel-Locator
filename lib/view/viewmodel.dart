@@ -22,7 +22,8 @@ class ViewModel extends ChangeNotifier {
       try {
         searchList = Global.model!
             .where((element) =>
-                element.name!.toLowerCase().contains(text.toLowerCase()))
+                element.name!.toLowerCase().contains(text.toLowerCase()) ||
+                element.denom!.toLowerCase().contains(text.toLowerCase()))
             .toList();
       } catch (e) {
         searchList = [];

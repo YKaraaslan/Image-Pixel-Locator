@@ -4,7 +4,7 @@ class HardcodedModel {
       "name": "Game 1",
       "description": "Description",
       "manufacturer": "Konamı",
-      "denom": "123",
+      "denom": "123.12",
       "uniqueID": "mnx]Z",
       "machines": [
         {
@@ -64,7 +64,7 @@ class HardcodedModel {
       "name": "Game 2",
       "description": "Description",
       "manufacturer": "Konami",
-      "denom": "2",
+      "denom": "123.52",
       "uniqueID": "hswvc",
       "machines": [
         {
@@ -112,7 +112,7 @@ class HardcodedModel {
       "name": "Game 3",
       "description": "Description",
       "manufacturer": "NewGameMaker",
-      "denom": "2",
+      "denom": "222",
       "uniqueID": "gYnnt",
       "machines": [
         {
@@ -160,7 +160,7 @@ class HardcodedModel {
       "name": "Game 4",
       "description": "Description",
       "manufacturer": "NewGame",
-      "denom": "5",
+      "denom": "223",
       "uniqueID": "vpmyj",
       "machines": [
         {

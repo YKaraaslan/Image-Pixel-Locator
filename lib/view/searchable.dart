@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/model/global.dart';
-import 'pixel_shower.dart';
+import 'blink_shower.dart';
 import 'viewmodel.dart';
 
 class Searchable extends StatefulWidget {
