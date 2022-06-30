@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/model/global.dart';
-import 'blink_shower.dart';
 import 'viewmodel.dart';
 
 class Searchable extends StatefulWidget {
@@ -40,17 +39,10 @@ class _SearchableState extends State<Searchable> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) => ListTile(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PixelShower(
-                          model: value.searchList[index],
-                        ),
-                      ),
-                    );
+                    value.goToMapPage(context, value.searchList[index]);
                   },
                   title: Text(value.searchList[index].name! +
-                      (value.searchList[index].machines!.length > 1
+                      (value.searchList[index].machines!.isNotEmpty
                           ? ' (x${value.searchList[index].machines!.length.toString()})'
                           : '')),
                   subtitle: Text(value.searchList[index].description!),

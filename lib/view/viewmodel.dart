@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../core/model/asset_model.dart';
 import '../core/model/global.dart';
 import '../core/service/network_manager.dart';
+import 'show_selected_on_map/show_selected_on_map_view.dart';
 
 class ViewModel extends ChangeNotifier {
   late GlobalKey<FormState> formKey;
@@ -30,5 +31,23 @@ class ViewModel extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  void goToMapPage(BuildContext context, GameModel searchList) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShowSelectedOnMapView(model: searchList),
+      ),
+    );
+
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => PixelShower(
+    //       model: searchList,
+    //     ),
+    //   ),
+    // );
   }
 }

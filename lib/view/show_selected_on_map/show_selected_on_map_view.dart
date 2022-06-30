@@ -1,22 +1,26 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'show_all_on_map_viewmodel.dart';
-import 'dart:ui' as ui;
 
 import '../../core/constants/enums.dart';
 import '../../core/model/asset_model.dart';
-import '../../core/model/global.dart';
+import 'show_selected_on_map_viewmodel.dart';
 
-class ShowAllOnMapView extends StatefulWidget {
-  const ShowAllOnMapView({Key? key}) : super(key: key);
+class ShowSelectedOnMapView extends StatefulWidget {
+  const ShowSelectedOnMapView({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
+  final GameModel model;
 
   @override
-  State<ShowAllOnMapView> createState() => _ShowAllOnMapViewState();
+  State<ShowSelectedOnMapView> createState() => _ShowSelectedOnMapViewState();
 }
 
-class _ShowAllOnMapViewState extends State<ShowAllOnMapView> {
-  late final ShowAllOnMapViewModel viewModel =
-      context.read<ShowAllOnMapViewModel>();
+class _ShowSelectedOnMapViewState extends State<ShowSelectedOnMapView> {
+  late final ShowSelectedOnMapViewModel viewModel =
+      context.read<ShowSelectedOnMapViewModel>();
 
   @override
   void initState() {
@@ -28,7 +32,7 @@ class _ShowAllOnMapViewState extends State<ShowAllOnMapView> {
   Widget build(BuildContext context) {
     return InteractiveViewer(
       maxScale: 5,
-      child: Consumer<ShowAllOnMapViewModel>(
+      child: Consumer<ShowSelectedOnMapViewModel>(
         builder: (context, value, child) => Scaffold(
           body: Center(
             child: FittedBox(
@@ -40,7 +44,7 @@ class _ShowAllOnMapViewState extends State<ShowAllOnMapView> {
                         key: viewModel.paintKey,
                         child: CustomPaint(
                           foregroundPainter: LinePainter(
-                            models: Global.model ?? [],
+                            models: widget.model,
                           ),
                           child: Image.asset(
                             viewModel.imagePath,
@@ -61,7 +65,7 @@ class _ShowAllOnMapViewState extends State<ShowAllOnMapView> {
 
 class LinePainter extends CustomPainter {
   const LinePainter({Key? key, required this.models});
-  final List<GameModel> models;
+  final GameModel models;
 
   void drawRectangle(Canvas canvas, Machines model) {
     final paint = Paint()
@@ -128,17 +132,15 @@ class LinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (var game in models) {
-      for (var machine in game.machines!) {
-        if (machine!.drawType == Types.rectangle.getName()) {
-          drawRectangle(canvas, machine);
-        } else if (machine.drawType == Types.circle.getName()) {
-          drawCircle(canvas, machine);
-        } else if (machine.drawType == Types.line.getName()) {
-          drawLine(canvas, machine);
-        } else if (machine.drawType == Types.point.getName()) {
-          drawPoint(canvas, machine);
-        }
+    for (var machine in models.machines!) {
+      if (machine!.drawType == Types.rectangle.getName()) {
+        drawRectangle(canvas, machine);
+      } else if (machine.drawType == Types.circle.getName()) {
+        drawCircle(canvas, machine);
+      } else if (machine.drawType == Types.line.getName()) {
+        drawLine(canvas, machine);
+      } else if (machine.drawType == Types.point.getName()) {
+        drawPoint(canvas, machine);
       }
     }
   }

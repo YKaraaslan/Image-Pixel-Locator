@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sample/view/show_all_on_map/show_all_on_map_view.dart';
 
 import 'view/searchable.dart';
+import 'view/show_all_on_map/show_all_on_map_view.dart';
 import 'view/show_all_on_map/show_all_on_map_viewmodel.dart';
+import 'view/show_selected_on_map/show_selected_on_map_viewmodel.dart';
 import 'view/viewmodel.dart';
 
 void main() {
@@ -12,6 +13,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => ViewModel()),
         ChangeNotifierProvider(create: (context) => ShowAllOnMapViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => ShowSelectedOnMapViewModel()),
       ],
       child: const MyApp(),
     ),
