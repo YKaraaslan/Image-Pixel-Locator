@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sample/view/color_picker_widget.dart';
+import 'package:sample/view/show_all_on_map/show_all_on_map_view.dart';
 
 import 'view/searchable.dart';
+import 'view/show_all_on_map/show_all_on_map_viewmodel.dart';
 import 'view/viewmodel.dart';
 
 void main() {
@@ -10,6 +11,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ViewModel()),
+        ChangeNotifierProvider(create: (context) => ShowAllOnMapViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -54,10 +56,15 @@ class _HomePageState extends State<HomePage> {
         body: const Searchable(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const ColorPickerWidget(),
+            //   ),
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ColorPickerWidget(),
+                builder: (context) => const ShowAllOnMapView(),
               ),
             );
           },

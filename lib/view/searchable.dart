@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/global.dart';
+import '../core/model/global.dart';
 import 'pixel_shower.dart';
 import 'viewmodel.dart';
 
@@ -49,7 +49,10 @@ class _SearchableState extends State<Searchable> {
                       ),
                     );
                   },
-                  title: Text(value.searchList[index].name! + (value.searchList[index].machines!.length > 1 ? ' (x${value.searchList[index].machines!.length.toString()})' : '')),
+                  title: Text(value.searchList[index].name! +
+                      (value.searchList[index].machines!.length > 1
+                          ? ' (x${value.searchList[index].machines!.length.toString()})'
+                          : '')),
                   subtitle: Text(value.searchList[index].description!),
                 ),
               ),

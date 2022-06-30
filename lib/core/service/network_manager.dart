@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../model/asset_model.dart';
+import '../model/harcoded_model.dart';
 
 abstract class INetworkManager {
   INetworkManager();
@@ -16,6 +17,7 @@ class NetworkManager extends INetworkManager {
     baseUrl: 'http://192.168.1.104:8080/',
   ));
 
+  // ignore: unused_element
   Future<dynamic> _getDioRequest() async {
     final response = await dio.get(_path);
 
@@ -26,14 +28,8 @@ class NetworkManager extends INetworkManager {
 
   @override
   Future<List<GameModel>?> getModels() async {
-    final response = await _getDioRequest();
-    returnType = [];
-    if (response is List) {
-      return response.map((e) {
-        return GameModel.fromMap(e);
-      }).toList();
-    } else {
-      return [];
-    }
+    return HardcodedModel.response.map((e) {
+      return GameModel.fromMap(e);
+    }).toList();
   }
 }

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:image/image.dart' as img;
 
-import '../model/asset_model.dart';
+import '../core/model/asset_model.dart';
 
 class PixelShower extends StatefulWidget {
   const PixelShower({Key? key, required this.model}) : super(key: key);
@@ -17,7 +17,8 @@ class PixelShower extends StatefulWidget {
   State<PixelShower> createState() => _PixelShowerState();
 }
 
-class _PixelShowerState extends State<PixelShower> with TickerProviderStateMixin {
+class _PixelShowerState extends State<PixelShower>
+    with TickerProviderStateMixin {
   GlobalKey imageKey = GlobalKey();
   String imagePath = 'assets/map2.png';
   img.Image? photo;
@@ -30,18 +31,22 @@ class _PixelShowerState extends State<PixelShower> with TickerProviderStateMixin
     super.initState();
     machines = [];
 
-    sizeAnimationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    sizeAnimationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     sizeAnimationController.repeat();
-    sizeAnimation = Tween<double>(begin: 0, end: 40).animate(sizeAnimationController);
+    sizeAnimation =
+        Tween<double>(begin: 0, end: 40).animate(sizeAnimationController);
     sizeAnimation.addListener(() {
       if (mounted) {
         setState(() {});
       }
     });
 
-    opacityAnimationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    opacityAnimationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     opacityAnimationController.repeat();
-    opacityAnimation = Tween<double>(begin: 1, end: 0.3).animate(opacityAnimationController);
+    opacityAnimation =
+        Tween<double>(begin: 1, end: 0.3).animate(opacityAnimationController);
     opacityAnimation.addListener(() {
       if (mounted) {
         setState(() {});
@@ -110,7 +115,8 @@ class _PixelShowerState extends State<PixelShower> with TickerProviderStateMixin
         child: Opacity(
           opacity: opacityAnimation.value,
           child: Container(
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red.withOpacity(0.7)),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: Colors.red.withOpacity(0.7)),
             height: sizeAnimation.value,
             width: sizeAnimation.value,
           ),
@@ -134,7 +140,8 @@ class _PixelShowerState extends State<PixelShower> with TickerProviderStateMixin
     machines.add(photoWidget());
 
     for (var machine in model.machines!) {
-      Offset localPosition = ui.Offset(machine!.coordinates!.startX!, machine.coordinates!.startY!);
+      Offset localPosition = ui.Offset(
+          machine!.coordinates!.startX!, machine.coordinates!.startY!);
 
       if (box != null) {
         double widgetScale = box.size.width / photo!.width;
