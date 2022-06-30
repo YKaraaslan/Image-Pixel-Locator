@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'view/searchable.dart';
-import 'view/show_all_on_map/show_all_on_map_view.dart';
 import 'view/show_all_on_map/show_all_on_map_viewmodel.dart';
 import 'view/show_selected_on_map/show_selected_on_map_viewmodel.dart';
 import 'view/viewmodel.dart';
@@ -54,25 +53,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Scaffold(
-        body: const Searchable(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => const ColorPickerWidget(),
-            //   ),
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ShowAllOnMapView(),
-              ),
-            );
-          },
-          child: const Icon(Icons.chevron_right),
-        ),
+        body: Searchable(),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     // Navigator.push(
+        //     //   context,
+        //     //   MaterialPageRoute(
+        //     //     builder: (context) => const ColorPickerWidget(),
+        //     //   ),
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => const ShowAllOnMapView(),
+        //       ),
+        //     );
+        //   },
+        //   child: const Icon(Icons.chevron_right),
+        // ),
       ),
     );
   }

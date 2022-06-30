@@ -32,20 +32,33 @@ class _SearchableState extends State<Searchable> {
               TextFormField(
                 controller: value.textEditingController,
                 onChanged: value.onChangeMethod,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.search),
+                  labelText: "Search...",
+                ),
               ),
               const SizedBox(height: 25),
-              ListView.builder(
-                itemCount: value.searchList.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => ListTile(
-                  onTap: () {
-                    value.goToMapPage(context, value.searchList[index]);
-                  },
-                  title: Text(value.searchList[index].name! +
-                      (value.searchList[index].machines!.isNotEmpty
-                          ? ' (x${value.searchList[index].machines!.length.toString()})'
-                          : '')),
-                  subtitle: Text(value.searchList[index].description!),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: ListView.builder(
+                    itemCount: value.searchList.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => ListTile(
+                      onTap: () {
+                        value.goToMapPage(context, value.searchList[index]);
+                      },
+                      title: Text(value.searchList[index].name! +
+                          (value.searchList[index].machines!.isNotEmpty
+                              ? ' (x${value.searchList[index].machines!.length.toString()})'
+                              : '')),
+                      subtitle: Text(value.searchList[index].manufacturer!),
+                      trailing: Text(
+                        '\$${value.searchList[index].denom!}',
+                        style: const TextStyle(color: Colors.black87),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -80,12 +80,12 @@ class _PixelShowerState extends State<PixelShower>
   }
 
   Widget body() {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Color picker"),
-      ),
-      body: InteractiveViewer(
-        child: Stack(children: machines),
+    return SafeArea(
+      child: InteractiveViewer(
+        maxScale: 5,
+        child: Scaffold(
+          body: Center(child: Stack(children: machines)),
+        ),
       ),
     );
   }

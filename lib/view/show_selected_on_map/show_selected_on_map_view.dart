@@ -69,7 +69,7 @@ class LinePainter extends CustomPainter {
 
   void drawRectangle(Canvas canvas, Machines model) {
     final paint = Paint()
-      ..strokeWidth = 3
+      ..strokeWidth = 5
       ..color = Colors.red
       ..style = ui.PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -83,7 +83,7 @@ class LinePainter extends CustomPainter {
 
   void drawCircle(Canvas canvas, Machines model) {
     final paint = Paint()
-      ..strokeWidth = 3
+      ..strokeWidth = 5
       ..color = Colors.red
       ..style = ui.PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -96,7 +96,7 @@ class LinePainter extends CustomPainter {
 
   void drawLine(Canvas canvas, Machines model) {
     final paint = Paint()
-      ..strokeWidth = 3
+      ..strokeWidth = 5
       ..color = Colors.red
       ..style = ui.PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -114,20 +114,16 @@ class LinePainter extends CustomPainter {
       ..style = ui.PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(
+    canvas.drawCircle(
         Offset(model.coordinates!.startX!, model.coordinates!.startY!),
-        Offset(model.coordinates!.startX!, model.coordinates!.startY!),
+        5,
         paint);
   }
 
-  void rotate(
-      {required Canvas canvas,
-      required double cx,
-      required double cy,
-      required double angle}) {
-    canvas.translate(cx, cy);
+  void rotate(Canvas canvas, double x, double y, double angle) {
+    canvas.translate(x, y);
     canvas.rotate(angle);
-    canvas.translate(-cx, -cy);
+    canvas.translate(-x, -y);
   }
 
   @override

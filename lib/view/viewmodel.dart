@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/model/asset_model.dart';
 import '../core/model/global.dart';
 import '../core/service/network_manager.dart';
-import 'show_selected_on_map/show_selected_on_map_view.dart';
+import 'blink_shower.dart';
 
 class ViewModel extends ChangeNotifier {
   late GlobalKey<FormState> formKey;
@@ -24,7 +24,10 @@ class ViewModel extends ChangeNotifier {
         searchList = Global.model!
             .where((element) =>
                 element.name!.toLowerCase().contains(text.toLowerCase()) ||
-                element.denom!.toLowerCase().contains(text.toLowerCase()))
+                element.denom!.toLowerCase().contains(text.toLowerCase()) ||
+                element.manufacturer!
+                    .toLowerCase()
+                    .contains(text.toLowerCase()))
             .toList();
       } catch (e) {
         searchList = [];
@@ -34,20 +37,20 @@ class ViewModel extends ChangeNotifier {
   }
 
   void goToMapPage(BuildContext context, GameModel searchList) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ShowSelectedOnMapView(model: searchList),
-      ),
-    );
-
     // Navigator.push(
     //   context,
     //   MaterialPageRoute(
-    //     builder: (context) => PixelShower(
-    //       model: searchList,
-    //     ),
+    //     builder: (context) => ShowSelectedOnMapView(model: searchList),
     //   ),
     // );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PixelShower(
+          model: searchList,
+        ),
+      ),
+    );
   }
 }
